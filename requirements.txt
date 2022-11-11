@@ -1,0 +1,7 @@
+bs4
+hurry.filesize
+pydub
+librosa
+bs4
+requests
+pytz
