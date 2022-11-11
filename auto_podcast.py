@@ -421,6 +421,6 @@ def main_loop():
       sleep(remaining * 3600)
 
 
-sendMessage("Heroku started")
+#sendMessage("Heroku started")
 print("Heroku started")
 main()
