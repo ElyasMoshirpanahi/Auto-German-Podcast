@@ -300,7 +300,15 @@ def main():
 
         print(f"Download link retrived :\n {download_link} \n Downloading now...")
 
-        link_DL(download_link)
+        while True:
+            try:
+                link_DL(download_link)
+                break
+            except Exception as e:
+                print("Error :",e.args)
+                print("Fetching a new podcast...")
+                main()
+        
 
         print("Download completed")
         path=f"/content/{file_name}"
