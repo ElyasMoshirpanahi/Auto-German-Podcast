@@ -1,6 +1,8 @@
 # Auto-German-Podcast
 ![alt text](https://i0.wp.com/pedagogiaparaconcurseiros.com.br/wp-content/uploads/2020/08/podcast-logo.jpg?fit=1000%2C800&ssl=1)
 
+
+## About
 This is a tiny script that i have developed quite a while ago to automate fetching a new podcast from www.spektrum.de and send it to my telegram channel,
 If run on server can handle cron jobs as well.
 You need a telegram bot added to both your channel and group as admin and your channel id,
