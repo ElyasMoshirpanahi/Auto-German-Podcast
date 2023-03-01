@@ -331,7 +331,7 @@ def main():
                 sendAudio(doc=path)
                 end = datetime.now() -  start 
                 print("="*20,f"Process done in {end} Seconds","="*20,"\n")
-                return
+                exit()
                 #Case 2 : file will be splitted into multiple parts 
             else:
                 print("file size is too big , spliting...")
@@ -385,7 +385,7 @@ def main():
 
                 end = datetime.now() -  start 
                 print("="*20,f"Process done in {end} Seconds","="*20,"\n")
-                return
+                exit()
         else:
             print("Podcast is too long passing...")
             main()
