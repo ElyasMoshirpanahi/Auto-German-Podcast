@@ -4,7 +4,11 @@
 name: Play podcast
 
 on: [workflow_dispatch]
-  
+
+env:
+  token: ${{ secrets.BOT_TOKEN }}
+  cid: ${{ secrets.CHANNEL_ID }}
+
 
 jobs:
   build:
@@ -26,6 +30,9 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Add vars
-      run : echo "TEST" >> private_data.py
-    - name: Add 
+    - name: Add bot token
+      run : echo "{{token}}" >> private_data.py
+    - name: Add cid
+      run : echo "{{cid}}" >> private_data.py
+    - name: Running the script
+      run : python auto_podcast.py
