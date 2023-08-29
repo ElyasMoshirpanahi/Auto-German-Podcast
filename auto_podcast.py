@@ -8,6 +8,15 @@ Original file is located at
 """
 from private_data import BOT_TOKEN , CHANNEL_ID
 
+
+if os.environ["BOT_TOKEN"]:
+    BOT_TOKEN = os.environ["secrets"]
+    print(f"bot id  from env is :{BOT_TOKEN}")
+    
+if os.environ["CHANNEL_ID"]:
+    CHANNEL_ID = os.environ["CHANNEL_ID"]
+    print(f"channel id  from env is :{CHANNEL_ID}")
+
 #@title imports
 from datetime import datetime
 from os import O_APPEND
