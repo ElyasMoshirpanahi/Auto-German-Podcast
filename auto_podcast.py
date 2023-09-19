@@ -44,21 +44,11 @@ def link_DL(url,Name="Audio_file"):
         f.write(chunk)
   return local_filename
 
+
 def del_all_mp3():
-  for i in g("/content/*.mp3"):
-    os.remove(i) 
-
-# def file_size(url):
-#   """
-#   Checks the file size of a url
-#   """
-
-#   # pass URL as first argument
-#   response = requests.head(url, allow_redirects=True)
-#   size = response.headers.get('content-length', -1)
-#   # size in megabytes (f-string, Python 3 only)
-#   fin=f"{'FILE SIZE':<40}: {int(size) / float(1 << 20):.2f} MB"
-#   return fin
+  path = os.getcwd()
+  for i in g(f"{path}/*.mp3"):
+    os.remove(i)
 
 def grab_link(link):
   """
@@ -286,9 +276,10 @@ def sendImage(doc,name,link, chat_id=CHANNEL_ID):
 
 #@title Main Function
 def main():
+
     start = datetime.now()
     print("="*20,start,"="*20,"\n",)
-
+    os_path = os.getcwd()
     name,img,link = fetch_and_compare()
 
     print(f"New podcast {name} will be downloaded")
@@ -311,7 +302,7 @@ def main():
         
 
         print("Download completed")
-        path=f"/content/{file_name}"
+        path=f"{os_path}/{file_name}"
         
         try:
 
@@ -347,8 +338,9 @@ def main():
                 print("Sending banner to the group")
                 sendImage(img,name,link)
                 print("Sending podcast to the group")
+                
                 for div in range(division_parts):
-                    files_path = '/content/'
+                    files_path = f'{os_path}/'
                     file_name = file_name.split(".mp3")[0]
                     startTime = StartOfSeg
                     endTime = EndOfSeg
@@ -380,7 +372,7 @@ def main():
                     """
                     print(f"Sending {Name_Only} now...")
                     sendAudio(File,text)
-                    print(f"Sent {Name_Only} , sleeping for 20 Secs for the next part!")
+                    print(f"Sent {Name_Only} , sleeping for 300 Secs for the next part!")
                     sleep(300)
 
                 end = datetime.now() -  start 
@@ -397,21 +389,3 @@ def main():
 
 del_all_mp3()
 main()
-
-  # else:
-  #   pass
-
-
-#Uncomment in servers without cronjob!
-#@title Main loop
-# def main_loop():
-#   while True:
-#     del_all_mp3()
-#     #0_Check the hour / wait if neccessory or /create a cron job¶
-#     time_ok , remaining = right_time()
-#     if time_ok:
-#       main()
-#     else:
-#       sleep(remaining * 3600)
-
-# main_loop()
