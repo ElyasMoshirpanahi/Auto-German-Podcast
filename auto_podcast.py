@@ -291,21 +291,21 @@ def sendImage(doc,name,link, chat_id=CHANNEL_ID):
 
 
 
-def check_podcast_exists(title):
-    global collection
+def check_podcast_exists(title,collection):
     result = collection.find_one({"title": title})  # <-- Call find_one on the collection object
     return (result!=None)
 #     return bool(result.acknowledged)
 
-def store_podcast_title(title):
-    global collection
+def store_podcast_title(title,collection):
     result = collection.insert_one({"title": title})  # <-- Call insert_one on the collection object
     print(f"New podcast inserted with _id: {result.inserted_id}")
 
 
 
+
 #@title Main Function
 def main():
+
     start = datetime.now()
     print("="*20,start,"="*20,"\n",)
 
@@ -316,14 +316,14 @@ def main():
     client = MongoClient(MONGODB_URI, server_api=ServerApi('1'))
     db  = client['podcast']
     collection = db.titles
-    podcast_exists = check_podcast_exists(name)
+    podcast_exists = check_podcast_exists(name,collection)
 
     if podcast_exists == True:
         print("Podcast already exists in the database,skipping")
         main()
     else:
         print("Podcast is brand new , storing the podcast")
-        store_podcast_title(name)
+        store_podcast_title(name,collection)
 
 
     print(f"New podcast {name} will be downloaded")
