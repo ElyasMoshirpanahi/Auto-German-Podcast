@@ -3,11 +3,11 @@
 
 name: Play podcast
 
-on: [workflow_dispatch]
+on: [workflow_dispatch,push]
 
 env:
-  token: ${{ secrets.BOT_TOKEN }}
-  cid: ${{ secrets.CHANNEL_ID }}
+  TOKEN: ${{ secrets.BOT_TOKEN }}
+  CHAT_ID: ${{ secrets.CHANNEL_ID }}
 
 
 jobs:
@@ -26,8 +26,8 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Add bot token
-      run : echo "{{token}}" >> private_data.py
-    - name: Add cid
-      run : echo "{{cid}}" >> private_data.py
+      run : echo $TOKEN >> private_data.py
+    - name: Add Chat Id
+      run : echo $CHAT_ID >> private_data.py
     - name: Running the script
       run : python auto_podcast.py
