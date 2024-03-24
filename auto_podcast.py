@@ -50,7 +50,7 @@ def link_DL(url,Name="Audio_file"):
   return local_filename
 
 def del_all_mp3():
-  for i in g("/content/*.mp3"):
+  for i in g("./*.mp3"):
     os.remove(i) 
 
 # def file_size(url):
@@ -359,7 +359,7 @@ def main():
         
 
         print("Download completed")
-        path=f"/content/{file_name}"
+        path=f"./{file_name}"
         
         try:
 
@@ -398,7 +398,7 @@ def main():
                 sendImage(img,name,link)
                 print("Sending podcast to the group")
                 for div in range(division_parts):
-                    files_path = '/content/'
+                    files_path = './'
                     file_name = file_name.split(".mp3")[0]
                     startTime = StartOfSeg
                     endTime = EndOfSeg
