@@ -291,14 +291,24 @@ def sendImage(doc,name,link, chat_id=CHANNEL_ID):
 
 
 
-def check_podcast_exists(title,collection):
-    result =True if collection.find_one({"title": title}) else False  # <-- Call find_one on the collection object
+def check_podcast_exists(data,collection):
+    result =collection.find_one(data)
+    Item_status = ["posted","broken"]
+
+    if collection.find_one(data):
+        status = collection.find_one(data)['status'] 
+        print(f"status of the current item is:{status}")
+        result = True if status in Item_status else False
+
+    else:
+        result = False
+     
     return result
 #     return bool(result.acknowledged)
 
-def store_podcast_title(title,collection):
-    result = collection.insert_one({"title": title})  # <-- Call insert_one on the collection object
-    print(f"New podcast inserted with _id: {result.inserted_id}")
+def store_podcast_title(data,collection):
+    result = collection.insert_one(data)  # <-- Call insert_one on the collection object
+    print(f"New podcast inserted with _id: {result.inserted_id} and body of {result}")
 
 
 
@@ -316,20 +326,22 @@ def main():
     client = MongoClient(MONGODB_URI, server_api=ServerApi('1'))
     db  = client['podcast']
     collection = db.titles
-    podcast_exists = check_podcast_exists(name,collection)
+    data_to_check = {"title":name}
+
+    podcast_exists = check_podcast_exists(data_to_check,collection)
 
     if podcast_exists == True:
         print("Podcast already exists in the database,skipping")
         main()
-    else:
-        print("Podcast is brand new , storing the podcast")
-        store_podcast_title(name,collection)
-
+        
 
     print(f"New podcast {name} will be downloaded")
 
     download_link = grab_link(link)
 
+
+    store_data_on_failure = {"title":name,"status":"broken"}
+    store_data_on_success = {"title":name,"status":"broken"}
     if download_link:
         file_name = download_link.split("/")[-1]
 
@@ -342,6 +354,7 @@ def main():
             except Exception as e:
                 print("Error :",e.args)
                 print("Fetching a new podcast...")
+                store_podcast_title(store_data_on_failure,collection)
                 main()
         
 
@@ -353,6 +366,7 @@ def main():
           duration_secs=librosa.get_duration(filename=path)
         except FileNotFoundError:
           print("bad link or file cannot be downloaded with the provided link,recalling the function")
+          store_podcast_title(store_data_on_failure,collection)
           main()
 
         if int(duration_secs/60) < 40:
@@ -366,6 +380,7 @@ def main():
                 sendAudio(doc=path)
                 end = datetime.now() -  start 
                 print("="*20,f"Process done in {end} Seconds","="*20,"\n")
+                store_podcast_title(store_data_on_success,collection)
                 exit()
                 #Case 2 : file will be splitted into multiple parts 
             else:
@@ -420,33 +435,18 @@ def main():
 
                 end = datetime.now() -  start 
                 print("="*20,f"Process done in {end} Seconds","="*20,"\n")
+                store_podcast_title(store_data_on_success,collection)
                 exit()
         else:
             print("Podcast is too long passing...")
+            store_podcast_title(store_data_on_failure,collection)
             main()
 
     else:
         print("Podcast link not found skiping to the next podcast")
+        store_podcast_title(store_data_on_failure,collection)
         main()
 
 
 del_all_mp3()
 main()
-
-  # else:
-  #   pass
-
-
-#Uncomment in servers without cronjob!
-#@title Main loop
-# def main_loop():
-#   while True:
-#     del_all_mp3()
-#     #0_Check the hour / wait if neccessory or /create a cron job¶
-#     time_ok , remaining = right_time()
-#     if time_ok:
-#       main()
-#     else:
-#       sleep(remaining * 3600)
-
-# main_loop()
