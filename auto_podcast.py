@@ -339,9 +339,9 @@ def main():
 
     download_link = grab_link(link)
 
-
-    store_data_on_failure = {"title":name,"status":"broken"}
-    store_data_on_success = {"title":name,"status":"broken"}
+    reason=None
+    store_data_on_failure = {"title":name,"url":download_link,"status":"broken"}
+    store_data_on_success = {"title":name,"url":download_link,"status":"posted"}
     if download_link:
         file_name = download_link.split("/")[-1]
 
@@ -354,6 +354,8 @@ def main():
             except Exception as e:
                 print("Error :",e.args)
                 print("Fetching a new podcast...")
+                reason = e.args
+                store_data_on_failure["log"]=reason
                 store_podcast_title(store_data_on_failure,collection)
                 main()
         
@@ -365,9 +367,11 @@ def main():
 
           duration_secs=librosa.get_duration(filename=path)
         except FileNotFoundError:
-          print("bad link or file cannot be downloaded with the provided link,recalling the function")
-          store_podcast_title(store_data_on_failure,collection)
-          main()
+            reason = "bad link or file cannot be downloaded with the provided link,recalling the function"
+            print(reason)
+            store_data_on_failure["log"]=reason
+            store_podcast_title(store_data_on_failure,collection)
+            main()
 
         if int(duration_secs/60) < 40:
             file_size= int(size(os.path.getsize(path),system=si).split("M")[0])
@@ -438,12 +442,16 @@ def main():
                 store_podcast_title(store_data_on_success,collection)
                 exit()
         else:
-            print("Podcast is too long passing...")
+            reason="Podcast is too long passing..."
+            print(reason)
+            store_data_on_failure["log"]=reason
             store_podcast_title(store_data_on_failure,collection)
             main()
 
     else:
-        print("Podcast link not found skiping to the next podcast")
+        reason="Podcast link not found skiping to the next podcast"
+        print(reason)
+        store_data_on_failure["log"]=reason
         store_podcast_title(store_data_on_failure,collection)
         main()
 

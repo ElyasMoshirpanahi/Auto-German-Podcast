@@ -6,8 +6,8 @@ name: Play podcast
 on: 
   workflow_dispatch:
   push:
-  # schedule:
-  #   - cron: '30 4 * * 6,0,1,2,3,4'
+  schedule:
+    - cron: '30 4 * * 6,0,1,2,3,4'
 env:
   BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
   CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
