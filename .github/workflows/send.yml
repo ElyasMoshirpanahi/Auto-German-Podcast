@@ -8,6 +8,7 @@ on: [workflow_dispatch,push]
 env:
   BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
   CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
 
 
 jobs:
@@ -24,10 +25,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    # - name: Create private_data.py
-    #   run: |
-    #     echo '${{ secrets.BOT_TOKEN }}' > private_data.py
-    #     echo '${{ secrets.CHANNEL_ID }}' >> private_data.py
 
     - name: Running the script
       run : python auto_podcast.py
