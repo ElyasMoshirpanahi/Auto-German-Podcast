@@ -4,3 +4,4 @@ librosa
 bs4
 pydub
 pytz
+pymongo

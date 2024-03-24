@@ -25,6 +25,8 @@ from time import  sleep
 from datetime import datetime
 import pytz
 import random
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 
 #@title Podcast Functions
 
@@ -284,12 +286,42 @@ def sendImage(doc,name,link, chat_id=CHANNEL_ID):
     response= requests.post(URL + "sendPhoto?chat_id={}".format(chat_id), data=data)
     return response.json()
 
+
+
+def check_podcast_exists(title):
+    global collection
+    result = collection.find_one({"title": title})  # <-- Call find_one on the collection object
+    return (result!=None)
+#     return bool(result.acknowledged)
+
+def store_podcast_title(title):
+    global collection
+    result = collection.insert_one({"title": title})  # <-- Call insert_one on the collection object
+    print(f"New podcast inserted with _id: {result.inserted_id}")
+
+
+
 #@title Main Function
 def main():
     start = datetime.now()
     print("="*20,start,"="*20,"\n",)
 
     name,img,link = fetch_and_compare()
+
+    #DB check
+    MONGODB_URI = os.environ.get('MONGODB_URI')
+    client = MongoClient(MONGODB_URI, server_api=ServerApi('1'))
+    db  = client['podcast']
+    collection = db.titles
+    podcast_exists = check_podcast_exists(name)
+
+    if podcast_exists == True:
+        print("Podcast already exists in the database,skipping")
+        main()
+    else:
+        print("Podcast is brand new , storing the podcast")
+        store_podcast_title(name)
+
 
     print(f"New podcast {name} will be downloaded")
 
