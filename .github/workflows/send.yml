@@ -24,10 +24,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-    - name: Add bot token
-      run : echo $BOT_TOKEN >> private_data.py
-    - name: Add Chat Id
-      run : echo $CHANNEL_ID >> private_data.py
+    # - name: Add bot token
+    #   run : echo "{{BOT_TOKEN}}" >> private_data.py
+    # - name: Add Chat Id
+    #   run : echo "{{CHANNEL_ID}}" >> private_data.py
     - name: Running the script
       run : python auto_podcast.py
