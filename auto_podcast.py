@@ -28,6 +28,9 @@ import random
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
+
+BOT_TOKEN = os.environ.get('BOT_TOKEN')
+CHANNEL_ID= os.environ.get('CHANNEL_ID')
 #@title Podcast Functions
 
 def link_DL(url,Name="Audio_file"):
