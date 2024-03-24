@@ -292,8 +292,8 @@ def sendImage(doc,name,link, chat_id=CHANNEL_ID):
 
 
 def check_podcast_exists(title,collection):
-    result = collection.find_one({"title": title})  # <-- Call find_one on the collection object
-    return (result!=None)
+    result =True if collection.find_one({"title": title}) else False  # <-- Call find_one on the collection object
+    return result
 #     return bool(result.acknowledged)
 
 def store_podcast_title(title,collection):
