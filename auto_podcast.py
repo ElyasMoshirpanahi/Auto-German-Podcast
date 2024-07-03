@@ -203,45 +203,38 @@ def add_to_file(content,file='links.txt'):
     print(f"Added {content} to file")
 
 def fetch_and_compare(skip:int = 0):
-    rand = random_theme()
+    #1_Compose the request
+    rand= random_theme()
     url = f"https://www.spektrum.de/podcast/{rand}/?skip={skip}"
     print(url)
 
     res = requests.get(url)
-    soup = BeautifulSoup(res.text, 'html.parser')
+    soup = BeautifulSoup(res.text,'html.parser')
 
+
+    #Open all used links
     lines = open_file() 
-
-    def extract_article_info(article):
-        try:
-            title = article.text.split(":", 1)[1] if ":" in article.text else article.text
-            img_src = list(article.children)[1].findAll("img")[0].get('src', '')
-            href = list(article.children)[1].get('href', '')
-            full_url = f"https://www.spektrum.de{href}" if href else ''
-            return (title.strip(), img_src, full_url)
-        except (IndexError, AttributeError):
-            print(f"Error parsing article: {article}")
-            return None
-
-    if skip == 0:
-        all_articles = [extract_article_info(article) for article in soup.findAll("article")[1:6]] + \
-                       [extract_article_info(article) for article in soup.findAll("article")[-10:]]
-    else:
-        all_articles = [extract_article_info(article) for article in soup.findAll("article")[-10:]]
     
-    all_articles = [article for article in all_articles if article is not None]
-
+    
+    #Fetch all the links
+    if skip == 0 :
+        all_articles = [(article.text.split(":")[-1],list(article.children)[-1].findAll("img")[0]['src'],f"https://www.spektrum.de{list(article.children)[-1]['href']}") for article in soup.findAll("article")]
+    else:
+        #No suggested or new Article!
+        all_articles = [(article.text.split(":")[-1],list(article.children)[-1].findAll("img")[0]['src'],f"https://www.spektrum.de{list(article.children)[-1]['href']}") for article in soup.findAll("article")[-10:]]
+        
     number = 1
     
+    #Check if a podcast is already sent
     for element in all_articles:
         link = element[2]
-        if link and link not in lines:
+        if link not in lines:
             add_to_file(link)
             return [el.strip() for el in element]
     else:
-        print("No new podcast was found skipping to older pages ")
+        print("No new podcast was found skiping to older pages ")
         number = number * 10 
-        return fetch_and_compare(skip=number)
+        fetch_and_compare(skip=number)
 
 #@title Telgram functions
 
