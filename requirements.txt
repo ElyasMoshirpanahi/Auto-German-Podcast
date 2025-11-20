@@ -1,7 +1,10 @@
 hurry.filesize
 pydub
 librosa
-bs4
-pydub
+beautifulsoup4
+requests
 pytz
 pymongo
+feedparser
+python-dotenv
+lxml

@@ -41,4 +41,4 @@ jobs:
       id: setup-ffmpeg
       
     - name: Running the script
-      run : python auto_podcast.py
+      run : python -m src.main
