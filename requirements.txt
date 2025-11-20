@@ -8,3 +8,5 @@ pymongo
 feedparser
 python-dotenv
 lxml
+yt-dlp
+ffmpeg-python

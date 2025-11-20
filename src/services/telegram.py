@@ -35,3 +35,14 @@ class TelegramBot:
             requests.post(self.base_url + 'sendPhoto', data=data)
         except Exception as e:
             print(f"Error sending photo: {e}")
+
+    def send_video(self, video_path, caption=None, chat_id=CHANNEL_ID):
+        if not self.base_url: return
+        try:
+            with open(video_path, 'rb') as f:
+                files = {'video': f}
+                data = {'chat_id': chat_id, 'caption': caption, 'parse_mode': 'HTML'}
+                print(f"Sending video: {video_path}...")
+                requests.post(self.base_url + 'sendVideo', files=files, data=data, timeout=600)
+        except Exception as e:
+            print(f"Error sending video: {e}")
